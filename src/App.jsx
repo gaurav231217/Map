@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -27,15 +27,21 @@ const yellowIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 });
-const defaultCenter = [28.6139, 77.2090]; // New Delhi
+
 
 function App() {
+  const [defaultCenter,setDefaultCenter]=useState([51.507351,-0.127758]);
   const [distance,setDistance]=useState();
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [origin,setOrigin] = useState("");  
   const [destination,setDestination] = useState("");
-  const [bool,setBool]=useState(true);
+  const [bool,setBool]=useState(false);
+  const [center,setCenter]=useState(true);
+
+
+
+
 
   const handleSearch = async () => {
     const geocode = async (place) => {
@@ -46,55 +52,70 @@ function App() {
       }
       return null;
     };
-     if(bool){
+    
+     if(origin!="My current"){
     const fromCoords = await geocode(origin);
     setFrom(fromCoords);
      }
+     
     const toCoords = await geocode(destination);
     setTo(toCoords);
     setBool(true);
 
           
   };
-  
-          
-     
-  const handleUseMyLocation = () => {
-        
-    setBool(false);
-    
-        if (navigator.geolocation) {
+
+  useEffect(()=>{
+           
+
+           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
               (position) => {
                 setFrom({
                   lat: position.coords.latitude,
                  lng: position.coords.longitude,
                });
-              alert("GKT");
-              setOrigin("My current");
+               setOrigin("My current");
+              setDefaultCenter([position.coords.latitude,position.coords.longitude]);
+             
+              
+              
+             
             },
               (error) => {
                 console.error('Error getting location:', error);
                 alert('Unable to retrieve your location.');
-              }
-          );
-          } else {
-            alert('Geolocation is not supported by your browser.');
-          }
-         
-          
-       }
+              })}
+
+  },[])
+  const trackBikeLocation=()=>{
+     alert(defaultCenter);
+
+  }
+  const stopBikeLocation=()=>{
+
+  }       
+     
+ 
   return (
     <div style={{ overflow:"hidden" }}>
       <div className="search-bar">
         <input type="text" value={origin} placeholder="From" onChange={(e)=>{setOrigin(e.target.value)}} />
         <input type="text" value={destination} placeholder="To" onChange={(e)=>{setDestination(e.target.value)}} />
         <button onClick={handleSearch}>Show Route</button>
-        <button onClick={handleUseMyLocation}>use my current location</button>
+       
+        <button onClick={trackBikeLocation}>Track Bike Location</button>
+        <button onClick={stopBikeLocation}>stop Bike Location</button>
         <div>{distance}</div>
       </div>
 
-      <MapContainer center={defaultCenter} zoom={13} style={{ height: '100vh', width: '100%' }}>
+
+
+
+      <MapContainer center={defaultCenter} zoom={13} style={{ height: '100vh', width: '100%' }}
+      
+        
+      >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {from && <Marker position={from} icon={redIcon} />}
         {to && <Marker position={to} icon={yellowIcon} />}
@@ -105,11 +126,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
