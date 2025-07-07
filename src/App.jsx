@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import bikeImg from './assets/caric.png';
 
@@ -39,6 +40,7 @@ const yellowIcon = new L.Icon({
 });
 
 
+
 function App() {
   const trackingInterval = useRef(null);
   const [defaultCenter, setDefaultCenter] = useState([51.507351, -0.127758]);
@@ -49,6 +51,10 @@ function App() {
   const [destination, setDestination] = useState("");
   const [bool, setBool] = useState(false);
   const [center, setCenter] = useState(true);
+
+
+
+
 
 
 
@@ -69,6 +75,12 @@ function App() {
       setFrom(fromCoords);
     }
 
+    
+     if(origin!="My current"){
+    const fromCoords = await geocode(origin);
+    setFrom(fromCoords);
+     }
+     
     const toCoords = await geocode(destination);
     setTo(toCoords);
     setBool(true);
@@ -143,6 +155,10 @@ function App() {
     }
   };
 
+
+  
+     
+ 
   return (
     <div style={{ overflow: "hidden" }}>
       <div className="search-bar">
@@ -150,6 +166,9 @@ function App() {
         <input type="text" value={destination} placeholder="To" onChange={(e) => { setDestination(e.target.value) }} />
         <button onClick={handleSearch}>Show Route</button>
 
+        <button onClick={trackBikeLocation}>Track Bike Location</button>
+        <button onClick={stopBikeLocation}>stop Bike Location</button>
+       
         <button onClick={trackBikeLocation}>Track Bike Location</button>
         <button onClick={stopBikeLocation}>stop Bike Location</button>
         <div>{distance}</div>
@@ -162,6 +181,13 @@ function App() {
 
 
       >
+
+
+
+      <MapContainer center={defaultCenter} zoom={13} style={{ height: '100vh', width: '100%' }}
+      
+        
+      >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {from && <Marker position={from} icon={bikeIcon} />}
         {to && <Marker position={to} icon={yellowIcon} />}
@@ -172,11 +198,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
