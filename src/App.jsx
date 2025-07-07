@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
+
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import bikeImg from './assets/caric.png';
 
@@ -42,7 +42,7 @@ const yellowIcon = new L.Icon({
 
 
 function App() {
-  const trackingInterval = useRef(null);
+  
   const [defaultCenter, setDefaultCenter] = useState([51.507351, -0.127758]);
   const [distance, setDistance] = useState();
   const [from, setFrom] = useState(null);
@@ -168,19 +168,14 @@ function App() {
 
         <button onClick={trackBikeLocation}>Track Bike Location</button>
         <button onClick={stopBikeLocation}>stop Bike Location</button>
-       
-        <button onClick={trackBikeLocation}>Track Bike Location</button>
-        <button onClick={stopBikeLocation}>stop Bike Location</button>
+      
         <div>{distance}</div>
       </div>
 
 
 
 
-      <MapContainer center={defaultCenter} zoom={13} style={{ height: '100vh', width: '100%' }}
-
-
-      >
+      
 
 
 
