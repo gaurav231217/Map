@@ -63,3 +63,6 @@
 .read-the-docs {
   color: #888;
 }
+.leaflet-routing-alternatives-container{
+  display: none;
+}
